@@ -5,7 +5,7 @@ Window {
     visible: true
     width: 320
     height: 240
-    title: qsTr("LooperDooper")
+    title: qsTr("Looper")
 
     Rectangle {
         anchors.fill: parent
