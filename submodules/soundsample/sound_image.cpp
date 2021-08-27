@@ -14,7 +14,7 @@ Sound_image::Sound_image(QObject *parent) : QObject(parent),
 
 }
 
-void Sound_image::set_sample(SoundSample *s)
+void Sound_image::set_sample(Sound *s)
 {
     m_sample = s;
     calculate_graph();
@@ -30,7 +30,7 @@ void Sound_image::calculate_graph()
         m_graph->reset();
         emit qml_image_updated();
         for(int i=0;i<m_sample->get_size();i++) {
-            pixel_sample_value = qMax(pixel_sample_value, qAbs(m_sample->get_sample_at(i)));
+            pixel_sample_value = qMax(pixel_sample_value, qAbs(m_sample->get_sample_at(i).left));
             pixel_sample_index+=1;
             if(pixel_sample_index>=samples_per_pixel) {
                 pixels ++;

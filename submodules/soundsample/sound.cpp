@@ -1,7 +1,7 @@
-#include "soundsample.h"
+#include "sound.h"
 #include <QDebug>
 
-SoundSample::SoundSample() :
+Sound::Sound() :
     m_buffer_size { 0 } ,
     m_buffer { nullptr } ,
     m_write_pointer { 0 } ,
@@ -14,24 +14,24 @@ SoundSample::SoundSample() :
 
 }
 
-SoundSample::~SoundSample()
+Sound::~Sound()
 {
     if(m_buffer_size>0) {
         delete m_buffer;
     }
 }
 
-void SoundSample::init(int size)
+void Sound::init(int size)
 {
     if(m_buffer_size>0) {
         delete m_buffer;
     }
     m_buffer_size = size;
-    m_buffer = new double[size];
+    m_buffer = new Sound::Sample[size];
     m_loop_length = size;
 }
 
-void SoundSample::insert_sample(double value)
+void Sound::insert_sample( const Sound::Sample& value )
 {
     if(m_buffer_size>0) {
         if(m_write_pointer >= m_buffer_size) {
@@ -41,36 +41,30 @@ void SoundSample::insert_sample(double value)
         m_write_pointer++;
         m_loop_length = qMax(static_cast<double>(m_write_pointer),m_loop_length);
     }
-    //qDebug() << "SoundSample::insert_sample " << m_write_pointer;
 }
 
-double SoundSample::get_next_sample()
+const Sound::Sample& Sound::get_next_sample()
 {
-    /*
-    double m_read_pointer_overflow = m_read_pointer - m_buffer_size;
-    if( m_read_pointer_overflow >= 0 ) {
-        m_read_pointer = m_read_pointer_overflow;
-    }
-    */
+    // phase value (float) to buffer address (int)
+    int m_read_pointer_int = static_cast<int>(m_read_pointer);
 
+    // increase phase value
+    m_read_pointer += m_read_speed;
     if(m_read_pointer > m_buffer_size) {
         m_read_pointer = m_start_point;
     }
 
-    int m_read_pointer_int = static_cast<int>(m_read_pointer);
-    double nextSample = m_buffer[m_read_pointer_int];
-    m_read_pointer += m_read_speed;
-    //qDebug() << "SoundSample::get_next_sample " << m_read_pointer << " " << nextSample;
-    return nextSample;
+    // return buffer value
+    return m_buffer[m_read_pointer_int];
 }
 
-void SoundSample::set_read_speed(double s)
+void Sound::set_read_speed(double s)
 {
     qDebug() << "SoundSample::set_read_speed " << s;
     m_read_speed = s;
 }
 
-void SoundSample::setLoopLength(double l)
+void Sound::setLoopLength(double l)
 {
     if(l+m_start_point > m_buffer_size) {
         m_loop_length = m_buffer_size - m_start_point;
@@ -79,7 +73,7 @@ void SoundSample::setLoopLength(double l)
     }
 }
 
-void SoundSample::set_start_point(double p)
+void Sound::set_start_point(double p)
 {
     if(p+m_loop_length > m_buffer_size) {
         m_start_point = m_buffer_size - m_loop_length;
@@ -88,28 +82,42 @@ void SoundSample::set_start_point(double p)
     }
 }
 
-int SoundSample::get_size()
+int Sound::get_size()
 {
     return m_buffer_size;
 }
 
-double SoundSample::get_sample_at(int i)
+Sound::Sample Sound::get_sample_at(int i)
 {
-    double value = 0;
+    Sound::Sample value;
     if(i<m_buffer_size) {
         value = m_buffer[i];
     }
     return value;
 }
 
-void SoundSample::normalize()
+int Sound::get_write_pointer()
 {
-    double max_peak = 0;
+    return m_write_pointer;
+}
+
+int Sound::get_read_pointer()
+{
+    return m_read_pointer;
+}
+
+void Sound::normalize()
+{
+    double max_peak_left = 0;
+    double max_peak_right = 0;
     for(int i=0;i<m_buffer_size;i++) {
-        max_peak = qMax(max_peak,qAbs(m_buffer[i]));
+        max_peak_left = qMax(max_peak_left,qAbs(m_buffer[i].left));
+        max_peak_right = qMax(max_peak_right,qAbs(m_buffer[i].right));
     }
-    double normalize_factor = 1 / max_peak;
+    double normalize_factor_left = 1 / max_peak_left;
+    double normalize_factor_right = 1 / max_peak_right;
     for(int i=0;i<m_buffer_size;i++) {
-        m_buffer[i] = m_buffer[i] * normalize_factor;
+        m_buffer[i].left = m_buffer[i].left * normalize_factor_left;
+        m_buffer[i].right = m_buffer[i].right * normalize_factor_right;
     }
 }

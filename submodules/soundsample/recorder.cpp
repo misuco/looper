@@ -5,30 +5,27 @@ void Recorder::record(bool enable)
     m_record_enable = enable;
     emit QmlRecordEnabledUpdated();
     if(!enable) {
-        for(int channel=0;channel<s_channel_count;channel++) {
-            m_sound_samples[channel]->normalize();
-        }
+        m_sound_sample->normalize();
     }
 }
 
 Recorder::Recorder(QObject * parent) : QObject(parent) ,
-    m_record_enable { false }
+    m_record_enable { false },
+    m_record_pos { 0 }
 {
 
 }
 
-void Recorder::insert_sample(double value, int channel)
+void Recorder::insert_sample( const Sound::Sample& s)
 {
     if(m_record_enable) {
-        if(channel<s_channel_count) {
-            m_sound_samples[channel]->insert_sample(value);
-        }
+        m_sound_sample->insert_sample( s );
+        m_record_pos = m_sound_sample->get_write_pointer();
+        emit QmlRecordPosUpdated();
     }
 }
 
-void Recorder::set_sample(SoundSample *s, int channel)
+void Recorder::set_sample(Sound *s)
 {
-    if(channel<s_channel_count) {
-        m_sound_samples[channel] = s;
-    }
+    m_sound_sample = s;
 }

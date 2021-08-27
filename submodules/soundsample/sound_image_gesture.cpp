@@ -98,11 +98,9 @@ void Sound_image_gesture::canceled(QVariant x)
     released(x);
 }
 
-void Sound_image_gesture::set_sample(SoundSample *s, int channel)
+void Sound_image_gesture::set_sample(Sound *s)
 {
-    if(channel<s_channel_count) {
-        m_sound_samples[channel] = s;
-    }
+    m_sound_sample = s;
 }
 
 void Sound_image_gesture::calculate()
@@ -124,16 +122,14 @@ void Sound_image_gesture::calculate()
                 y_diff_factor =  y_avg_norm;
             }
 
-            qDebug() << "Player::calculate p1.y " << p1.y << " p2.y "  << p2.y << " y_avg_norm " << y_avg_norm << " y_diff_factor " << y_diff_factor << " x_left " << x_left << " m_width " << m_width << " m_height " << m_height;
+            //qDebug() << "Player::calculate p1.y " << p1.y << " p2.y "  << p2.y << " y_avg_norm " << y_avg_norm << " y_diff_factor " << y_diff_factor << " x_left " << x_left << " m_width " << m_width << " m_height " << m_height;
 
-            for(int i=0;i<2;i++) {
-                double loop_length = x_diff / m_width * m_sound_samples[i]->get_size();
-                double start_point = x_left / m_width * m_sound_samples[i]->get_size();
-                double read_speed = y_diff_factor;
-                m_sound_samples[i]->setLoopLength(loop_length);
-                m_sound_samples[i]->set_start_point(start_point);
-                m_sound_samples[i]->set_read_speed(read_speed);
-            }
+            double loop_length = x_diff / m_width * m_sound_sample->get_size();
+            double start_point = x_left / m_width * m_sound_sample->get_size();
+            double read_speed = y_diff_factor;
+            m_sound_sample->setLoopLength(loop_length);
+            m_sound_sample->set_start_point(start_point);
+            m_sound_sample->set_read_speed(read_speed);
 
             m_player->set_playing(true);
         } else {

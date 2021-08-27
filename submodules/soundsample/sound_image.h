@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include "sample_graph_model.h"
-#include "soundsample.h"
+#include "sound.h"
 
 class Sound_image : public QObject
 {
@@ -16,14 +16,14 @@ public:
     Q_INVOKABLE void calculate_graph();
 
     explicit Sound_image(QObject *parent = nullptr);
-    void set_sample(SoundSample * s);
+    void set_sample(Sound * s);
 
 signals:
     void qml_image_updated();
 
 private:
     Sample_graph_model* m_graph;
-    SoundSample* m_sample;
+    Sound* m_sample;
     double m_width;
 
 };

@@ -3,29 +3,31 @@
 
 #include <QObject>
 #include "submodules/audiooutput/iaudiosink.h"
-#include "soundsample.h"
+#include "sound.h"
 
 class Recorder : public QObject, public IAudioSink
 {
     Q_OBJECT
 
     Q_PROPERTY(bool record_enable MEMBER m_record_enable NOTIFY QmlRecordEnabledUpdated)
+    Q_PROPERTY(int  record_pos    MEMBER m_record_pos    NOTIFY QmlRecordPosUpdated)
 
 public:
     Q_INVOKABLE void record(bool enable);
 
     explicit Recorder(QObject *parent = nullptr);
-    virtual void insert_sample(double value, int channel);
-    void set_sample(SoundSample * s, int channel);
+    virtual void insert_sample( const Sound::Sample& s );
+    void set_sample(Sound * s);
 
 signals:
     void QmlRecordEnabledUpdated();
+    void QmlRecordPosUpdated();
 
 private:
-    static const int s_channel_count = 2;
-    SoundSample * m_sound_samples[s_channel_count];
+    Sound * m_sound_sample;
 
     bool m_record_enable;
+    int  m_record_pos;
 
 };
 

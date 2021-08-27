@@ -18,9 +18,9 @@ SOURCES += \
     submodules/audioinput/audioinput.cpp \
     submodules/audioinput/audioinfo.cpp \
     submodules/audiooutput/sampleformatconverter.cpp \
-    submodules/soundsample/soundsample.cpp \
     submodules/soundsample/player.cpp \
     submodules/soundsample/recorder.cpp \
+    submodules/soundsample/sound.cpp \
     submodules/soundsample/sound_image.cpp \
     submodules/soundsample/sample_graph_model.cpp \
     submodules/soundsample/sound_image_gesture.cpp
@@ -43,11 +43,11 @@ HEADERS += \
     submodules/audioinput/audioinput.h \
     submodules/audioinput/audioinfo.h \
     submodules/audiooutput/sampleformatconverter.h \
-    submodules/soundsample/soundsample.h \
     submodules/soundsample/player.h \
     submodules/audiooutput/iaudiosource.h \
     submodules/audiooutput/iaudiosink.h \
     submodules/soundsample/recorder.h \
+    submodules/soundsample/sound.h \
     submodules/soundsample/sound_image.h \
     submodules/soundsample/sample_graph_model.h \
     submodules/soundsample/sound_image_gesture.h

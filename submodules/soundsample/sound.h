@@ -1,29 +1,37 @@
-#ifndef SOUNDSAMPLE_H
-#define SOUNDSAMPLE_H
+#ifndef SOUND_H
+#define SOUND_H
 
 
-class SoundSample
+class Sound
 {
 public:
-    SoundSample();
-    ~SoundSample();
+    Sound();
+    ~Sound();
+
+    struct Sample {
+        double left;
+        double right;
+    };
 
     void init(int size);
 
-    void insert_sample(double value);
-    double get_next_sample();
+    void insert_sample(const Sample &value);
+    const Sample& get_next_sample();
     void set_read_speed(double s);
     void setLoopLength(double l);
     void set_start_point(double p);
 
     int get_size();
-    double get_sample_at(int i);
+    Sample get_sample_at(int i);
+
+    int get_write_pointer();
+    int get_read_pointer();
 
     void normalize();
 
 private:
     int m_buffer_size;
-    double * m_buffer;
+    Sample * m_buffer;
     int m_write_pointer;
     double m_read_pointer;
     double m_read_speed;
@@ -33,4 +41,4 @@ private:
 
 };
 
-#endif // SOUNDSAMPLE_H
+#endif // SOUND_H

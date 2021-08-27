@@ -56,11 +56,14 @@ qint64 SampleFormatConverter::readData(char *data, qint64 len)
     unsigned char *ptr = reinterpret_cast<unsigned char *>(data);
 
     for (int i = 0; i < numSamples; ++i) {
-        for (int j = 0; j < m_format.channelCount(); ++j) {
-            double next_sample = 0;
-            if(m_audio_source) {
-                next_sample = m_audio_source->get_next_sample(j);
-            }
+        Sound::Sample sample;
+        if(m_audio_source) {
+            sample = m_audio_source->get_next_sample();
+        }
+        for (int j = 0; j < 2; j++) {
+            double next_sample;
+            if(j==0) next_sample = sample.left;
+            else next_sample = sample.right;
 
             if (m_format.sampleSize() == 8 && m_format.sampleType() == QAudioFormat::UnSignedInt) {
                 quint8 value = m_maxAmplitude + next_sample * m_maxAmplitude;
@@ -119,6 +122,7 @@ qint64 SampleFormatConverter::writeData(const char *data, qint64 len)
     m_peak = 0;
 
     for (int i = 0; i < numSamples; ++i) {
+        Sound::Sample sample;
         for (int j = 0; j < m_format.channelCount(); ++j) {
             double value = 0;
 
@@ -150,9 +154,8 @@ qint64 SampleFormatConverter::writeData(const char *data, qint64 len)
                 value = *reinterpret_cast<const float*>(ptr); // assumes 0-1.0
             }
 
-            if(m_audio_sink) {
-                m_audio_sink->insert_sample(value,j);
-            }
+            if( j == 0 ) sample.left = value;
+            else if( j == 1 ) sample.right = value;
 
             m_peak = qMax(m_peak,qAbs(value));
 
@@ -176,6 +179,11 @@ qint64 SampleFormatConverter::writeData(const char *data, qint64 len)
 
             ptr += channelBytes;
         }
+
+        if(m_audio_sink) {
+            m_audio_sink->insert_sample( sample );
+        }
+
     }
 
     m_latest_samples_left->update();

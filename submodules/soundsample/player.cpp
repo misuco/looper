@@ -2,25 +2,23 @@
 #include <QDebug>
 
 Player::Player(QObject *parent) : QObject(parent),
-    m_playing { false }
+    m_playing { false },
+    m_play_pos { 0 }
 {
 
 }
 
-double Player::get_next_sample(int channel)
+const Sound::Sample& Player::get_next_sample()
 {
-    if(m_playing && channel < s_channel_count) {
-        return m_sound_samples[channel]->get_next_sample();
-    } else {
-        return 0;
-    }
+    const Sound::Sample& s = m_sound_sample->get_next_sample();
+
+    m_play_pos = m_sound_sample->get_read_pointer();
+    return s;
 }
 
-void Player::set_sample(SoundSample *s, int channel)
+void Player::set_sample(Sound *s)
 {
-    if(channel<s_channel_count) {
-        m_sound_samples[channel] = s;
-    }
+    m_sound_sample = s;
 }
 
 void Player::set_playing(bool state)

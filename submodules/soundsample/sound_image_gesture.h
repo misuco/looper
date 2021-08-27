@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QMap>
 #include "player.h"
-#include "soundsample.h"
+#include "sound.h"
 
 class Sound_image_gesture : public QObject
 {
@@ -21,12 +21,11 @@ public:
 
     explicit Sound_image_gesture(Player * p, QObject *parent = nullptr);
 
-    void set_sample(SoundSample *s, int channel);
+    void set_sample(Sound *s);
 
 private:
     Player * m_player;
-    static const int s_channel_count = 2;
-    SoundSample * m_sound_samples[s_channel_count];
+    Sound * m_sound_sample;
 
     // indexes of metaproperties
     const int c_point_id_index = 1;
