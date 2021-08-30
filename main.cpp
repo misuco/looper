@@ -23,8 +23,6 @@ int main(int argc, char *argv[])
     AudioOutputController audio_output_controller;
 
     Sound sample;
-    //sample.init(88200);
-    //sample.init_from_file( "qrc:/res/wav/t1.wav");
 
     Recorder recorder;
     recorder.set_sample(&sample);
@@ -32,12 +30,14 @@ int main(int argc, char *argv[])
     Player player;
     player.set_sample(&sample);
 
+    /*
     Sound_image sound_image;
     sound_image.set_width(400);
     sound_image.set_sample(&sample);
 
     Sound_image_gesture sound_image_gesture(&player);
     sound_image_gesture.set_sample(&sample);
+    */
 
     SampleFormatConverter sample_format_converter(audio_output_controller.getAudioFormat());
 
@@ -58,8 +58,8 @@ int main(int argc, char *argv[])
     ctx->setContextProperty("samples", &sample_format_converter);
     ctx->setContextProperty("player", &player);
     ctx->setContextProperty("recorder", &recorder);
-    ctx->setContextProperty("sound_image", &sound_image);
-    ctx->setContextProperty("sound_image_gesture", &sound_image_gesture);
+//    ctx->setContextProperty("sound_image", &sound_image);
+//    ctx->setContextProperty("sound_image_gesture", &sound_image_gesture);
 
     engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
     if (engine.rootObjects().isEmpty())

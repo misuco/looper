@@ -6,5 +6,11 @@
         <file>qml/FileForm.ui.qml</file>
         <file>qml/Page2Form.ui.qml</file>
         <file>qml/qtquickcontrols2.conf</file>
+        <file>res/wav/loops/a82.wav</file>
+        <file>res/wav/loops/a120.wav</file>
+        <file>res/wav/loops/a122.wav</file>
+        <file>res/wav/loops/a124.wav</file>
+        <file>res/wav/loops/b122.wav</file>
+        <file>res/wav/loops/sweep.wav</file>
     </qresource>
 </RCC>

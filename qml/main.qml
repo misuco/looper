@@ -9,6 +9,7 @@ ApplicationWindow {
     title: qsTr("Looper")
 
     HomeForm {
+        /*
         gestureArea.onPressed: {
             //samples.play(true);
             sound_image_gesture.pressed(touchPoints)
@@ -25,14 +26,29 @@ ApplicationWindow {
             //samples.play(false);
             sound_image_gesture.canceled(touchPoints)
         }
+        */
+
+        playButtonMouseArea.onPressed: {
+            console.log("play mouse area pressed")
+            player.factory_preset();
+            player.set_playing( true )
+        }
+
+        playButtonMouseArea.onClicked: {
+            console.log("play clicked")
+            player.factory_preset();
+            player.set_playing( true )
+        }
         playButton.onClicked: {
             console.log("play clicked")
+            player.factory_preset();
             player.set_playing( true )
         }
         stopButton.onClicked: {
             console.log("stop clicked")
             player.set_playing( false )
         }
+
     }
 
     FileForm {
@@ -48,7 +64,7 @@ ApplicationWindow {
         fileDialog.onAccepted: {
             console.log("You chose: " + fileDialog.fileUrls)
             player.load_sample( fileDialog.fileUrls )
-            sound_image.calculate_graph()
+            //sound_image.calculate_graph()
             stackView.push("HomeForm.ui.qml")
             player.set_playing( true )
         }
@@ -106,7 +122,35 @@ ApplicationWindow {
                 bottom: parent.bottom
             }
             width: 200
-            text: "Recpos:" + recorder.record_pos + "\nPlaypos:" + player.play_pos + "\nPlaying:" + player.playing;
+            text: "Playing:" + player.playing;
+        }
+
+
+        Rectangle {
+            id: playButton
+            anchors.top: parent.top
+            anchors.right: recButton.left
+            width: parent.height
+            height: parent.height
+            color: player.playing ? "Red" : "Green"
+
+            Text {
+                anchors.fill: parent
+                text: ">"
+            }
+
+            Component.onCompleted: player.factory_preset()
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    if( player.playing ) {
+                        player.set_playing( false )
+                    } else {
+                        player.set_playing( true )
+                    }
+                }
+            }
         }
 
         Rectangle {
@@ -168,8 +212,10 @@ ApplicationWindow {
         id: stackView
         initialItem: "HomeForm.ui.qml"
         anchors.fill: parent
+        /*
         onWidthChanged: {
             sound_image.set_width( width )
         }
+        */
     }
 }

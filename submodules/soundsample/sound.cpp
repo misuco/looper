@@ -79,6 +79,7 @@ void Sound::init(int size)
     if(m_buffer_size>0) {
         delete[] m_buffer;
     }
+
     m_buffer_size = size;
     m_buffer = new Sound::Sample[size];
     m_loop_length = size;

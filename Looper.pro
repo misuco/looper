@@ -25,7 +25,8 @@ SOURCES += \
     submodules/soundsample/sound.cpp \
     submodules/soundsample/sound_image.cpp \
     submodules/soundsample/sample_graph_model.cpp \
-    submodules/soundsample/sound_image_gesture.cpp
+    submodules/soundsample/sound_image_gesture.cpp \
+    submodules/soundsample/track.cpp
 
 RESOURCES += qml.qrc
 
@@ -53,6 +54,7 @@ HEADERS += \
     submodules/soundsample/sound_image.h \
     submodules/soundsample/sample_graph_model.h \
     submodules/soundsample/sound_image_gesture.h \
+    submodules/soundsample/track.h \
     submodules/wav/AudioFile.h
 
 DISTFILES += \

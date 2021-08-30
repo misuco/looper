@@ -2,16 +2,20 @@ import QtQuick 2.12
 import QtQuick.Controls 2.5
 
 Page {
-    anchors.fill: parent
 
+    //anchors.fill: parent
     property alias stopButton: stopButton
     property alias playButton: playButton
-    property alias gestureArea: gestureArea
-    property alias oscillograph: oscillograph
-    property alias sound_image_repeater: sound_image_repeater
+    property alias playButtonMouseArea: playButtonMouseArea
+    property alias track_list: track_list
+    //property alias gestureArea: gestureArea
 
+    //    property alias oscillograph: oscillograph
+    //    property alias sound_image_repeater: sound_image_repeater
     title: qsTr("Home")
 
+
+    /*
     Rectangle {
         anchors.fill: parent
         anchors.bottomMargin: 205
@@ -23,7 +27,40 @@ Page {
             anchors.bottomMargin: 205
         }
     }
+    */
+    Rectangle {
+        id: track_list
+        width: parent.width
+        height: parent.height
+        color: "blue"
+        Column {
+            Repeater {
+                model: player.tracks
 
+                Rectangle {
+                    width: track_list.width
+                    height: track_list.height / 8
+                    color: "Green"
+                    border.width: 2
+
+                    Rectangle {
+                        width: 10
+                        height: parent.height
+                        x: track_list.width * modelData.play_pos
+                        color: "Yellow"
+                    }
+
+                    Text {
+                        id: name
+                        text: modelData.name
+                    }
+                }
+            }
+        }
+    }
+
+
+    /*
     Rectangle {
         y: 0
         width: parent.width
@@ -74,12 +111,17 @@ Page {
             }
         }
     }
-
+    */
     Button {
         id: playButton
         x: 15
         y: 345
         text: qsTr("PLAY")
+
+        MouseArea {
+            id: playButtonMouseArea
+            anchors.fill: parent
+        }
     }
 
     Button {
