@@ -4,9 +4,9 @@ import QtQuick.Controls 2.5
 Page {
 
     //anchors.fill: parent
-    property alias stopButton: stopButton
-    property alias playButton: playButton
-    property alias playButtonMouseArea: playButtonMouseArea
+    //property alias stopButton: stopButton
+    //property alias playButton: playButton
+    //property alias playButtonMouseArea: playButtonMouseArea
     property alias track_list: track_list
     //property alias gestureArea: gestureArea
 
@@ -40,7 +40,7 @@ Page {
                 Rectangle {
                     width: track_list.width
                     height: track_list.height / 8
-                    color: "Green"
+                    color: modelData.muted ? "Red" : "Green"
                     border.width: 2
 
                     Rectangle {
@@ -53,6 +53,11 @@ Page {
                     Text {
                         id: name
                         text: modelData.name
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: modelData.click( mouseX, mouseY );
                     }
                 }
             }
@@ -111,7 +116,6 @@ Page {
             }
         }
     }
-    */
     Button {
         id: playButton
         x: 15
@@ -130,4 +134,5 @@ Page {
         y: 345
         text: qsTr("STOP")
     }
+    */
 }

@@ -8,49 +8,6 @@ ApplicationWindow {
     visible: true
     title: qsTr("Looper")
 
-    HomeForm {
-        /*
-        gestureArea.onPressed: {
-            //samples.play(true);
-            sound_image_gesture.pressed(touchPoints)
-        }
-        gestureArea.onUpdated: {
-            sound_image_gesture.updated(touchPoints)
-            //samples.update(touchPoints[0].x / (parent.width / 2));
-        }
-        gestureArea.onReleased: {
-            //samples.play(false);
-            sound_image_gesture.released(touchPoints)
-        }
-        gestureArea.onCanceled: {
-            //samples.play(false);
-            sound_image_gesture.canceled(touchPoints)
-        }
-        */
-
-        playButtonMouseArea.onPressed: {
-            console.log("play mouse area pressed")
-            player.factory_preset();
-            player.set_playing( true )
-        }
-
-        playButtonMouseArea.onClicked: {
-            console.log("play clicked")
-            player.factory_preset();
-            player.set_playing( true )
-        }
-        playButton.onClicked: {
-            console.log("play clicked")
-            player.factory_preset();
-            player.set_playing( true )
-        }
-        stopButton.onClicked: {
-            console.log("stop clicked")
-            player.set_playing( false )
-        }
-
-    }
-
     FileForm {
         id: fileForm
         openButton.onPressed: {
@@ -65,12 +22,12 @@ ApplicationWindow {
             console.log("You chose: " + fileDialog.fileUrls)
             player.load_sample( fileDialog.fileUrls )
             //sound_image.calculate_graph()
-            stackView.push("HomeForm.ui.qml")
+            stackView.pop()
             player.set_playing( true )
         }
         fileDialog.onRejected: {
             console.log("File Dialog Canceled")
-            stackView.push("HomeForm.ui.qml")
+            stackView.pop()
         }
     }
 
@@ -210,7 +167,7 @@ ApplicationWindow {
 
     StackView {
         id: stackView
-        initialItem: "HomeForm.ui.qml"
+        initialItem: "TracksView.qml"
         anchors.fill: parent
         /*
         onWidthChanged: {

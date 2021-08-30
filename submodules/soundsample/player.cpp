@@ -54,17 +54,20 @@ const Sound::Sample& Player::get_next_sample()
         int track=0;
         foreach( auto sample, m_sound_samples ) {
             const Sound::Sample& s = sample->get_next_sample();
-            m_next_sample.left += s.left;
-            m_next_sample.right += s.right;
+
+            Track * t = dynamic_cast<Track *>(m_tracks.at( track ));
+            if( t && !t->get_muted() ) {
+                m_next_sample.left += s.left;
+                m_next_sample.right += s.right;
+            }
 
             if( update_track_status ) {
                 double p = sample->get_read_pointer();
                 double l = sample->get_size();
                 double play_pos = p / l;
-                Track * t = dynamic_cast<Track *>(m_tracks.at( track ));
                 if(t) t->set_play_pos( play_pos );
-                track++;
             }
+            track++;
         }
 
         m_next_sample.left /= m_sound_samples.size();
