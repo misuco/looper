@@ -20,8 +20,8 @@ void Recorder::insert_sample( const Sound::Sample& s)
 {
     if(m_record_enable) {
         m_sound_sample->insert_sample( s );
-        m_record_pos = m_sound_sample->get_write_pointer();
-        emit QmlRecordPosUpdated();
+        //m_record_pos = m_sound_sample->get_write_pointer();
+        //emit QmlRecordPosUpdated();
     }
 }
 

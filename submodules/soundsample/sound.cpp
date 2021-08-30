@@ -61,10 +61,7 @@ bool Sound::init_from_file(QString filename)
         qDebug() << "frame number " << audio_file.getNumSamplesPerChannel();
         qDebug() << "sample rate " << audio_file.getSampleRate();
 
-        m_buffer_size = audio_file.getNumSamplesPerChannel();
-        m_loop_length = m_buffer_size;
-
-        m_buffer = new Sound::Sample[m_buffer_size];
+        init( audio_file.getNumSamplesPerChannel() );
 
         for(int i=0;i<m_buffer_size;i++) {
             m_buffer[i].left = audio_file.samples[0][i];
@@ -85,6 +82,7 @@ void Sound::init(int size)
     m_buffer_size = size;
     m_buffer = new Sound::Sample[size];
     m_loop_length = size;
+    m_write_pointer = 0;
 }
 
 void Sound::insert_sample( const Sound::Sample& value )

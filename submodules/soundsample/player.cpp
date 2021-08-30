@@ -16,7 +16,7 @@ Player::Player(QObject *parent) : QObject(parent),
 
 const Sound::Sample& Player::get_next_sample()
 {
-    if( m_playing) {
+    if( m_playing ) {
         const Sound::Sample& s = m_sound_sample->get_next_sample();
         //m_play_pos = m_sound_sample->get_read_pointer();
         //emit QmlPlayPosUpdated();

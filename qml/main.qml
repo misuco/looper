@@ -25,21 +25,36 @@ ApplicationWindow {
             //samples.play(false);
             sound_image_gesture.canceled(touchPoints)
         }
+        playButton.onClicked: {
+            console.log("play clicked")
+            player.set_playing( true )
+        }
+        stopButton.onClicked: {
+            console.log("stop clicked")
+            player.set_playing( false )
+        }
     }
 
     FileForm {
         id: fileForm
+        openButton.onPressed: {
+            console.log("FileForm {openButton.onPressed}")
+            fileDialog.visible = true
+        }
+        openButton.onClicked: {
+            console.log("FileForm {openButton.onClicked}")
+            fileDialog.visible = true
+        }
         fileDialog.onAccepted: {
             console.log("You chose: " + fileDialog.fileUrls)
             player.load_sample( fileDialog.fileUrls )
             sound_image.calculate_graph()
+            stackView.push("HomeForm.ui.qml")
             player.set_playing( true )
         }
         fileDialog.onRejected: {
             console.log("File Dialog Canceled")
-        }
-        openButton.onReleased: {
-            fileDialog.visible = true
+            stackView.push("HomeForm.ui.qml")
         }
     }
 
@@ -134,8 +149,8 @@ ApplicationWindow {
                 width: parent.width
                 onClicked: {
                     stackView.push("FileForm.ui.qml")
-                    drawer.close()
                     fileForm.fileDialog.visible = true
+                    drawer.close()
                 }
             }
             ItemDelegate {
@@ -153,5 +168,8 @@ ApplicationWindow {
         id: stackView
         initialItem: "HomeForm.ui.qml"
         anchors.fill: parent
+        onWidthChanged: {
+            sound_image.set_width( width )
+        }
     }
 }

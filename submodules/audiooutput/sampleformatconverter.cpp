@@ -55,6 +55,8 @@ qint64 SampleFormatConverter::readData(char *data, qint64 len)
 
     unsigned char *ptr = reinterpret_cast<unsigned char *>(data);
 
+    qDebug() << "SampleFormatConverter::readData " << len;
+
     for (int i = 0; i < numSamples; ++i) {
         Sound::Sample sample;
         if(m_audio_source) {
