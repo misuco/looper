@@ -3,7 +3,7 @@
         <file>main.qml</file>
         <file>qml/HomeForm.ui.qml</file>
         <file>qml/main.qml</file>
-        <file>qml/Page1Form.ui.qml</file>
+        <file>qml/FileForm.ui.qml</file>
         <file>qml/Page2Form.ui.qml</file>
         <file>qml/qtquickcontrols2.conf</file>
     </qresource>

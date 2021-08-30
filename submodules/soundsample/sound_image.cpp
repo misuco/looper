@@ -34,7 +34,9 @@ void Sound_image::calculate_graph()
             pixel_sample_index+=1;
             if(pixel_sample_index>=samples_per_pixel) {
                 pixels ++;
-                //qDebug() << "Sound_image::calculate_graph insert " << pixel_sample_value << " " << pixels;
+
+                qDebug() << "Sound_image::calculate_graph insert " << pixel_sample_value << " " << pixels;
+
                 m_graph->append(pixel_sample_value);
                 emit qml_image_updated();
                 pixel_sample_value = 0;

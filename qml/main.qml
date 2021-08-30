@@ -27,6 +27,22 @@ ApplicationWindow {
         }
     }
 
+    FileForm {
+        id: fileForm
+        fileDialog.onAccepted: {
+            console.log("You chose: " + fileDialog.fileUrls)
+            player.load_sample( fileDialog.fileUrls )
+            sound_image.calculate_graph()
+            player.set_playing( true )
+        }
+        fileDialog.onRejected: {
+            console.log("File Dialog Canceled")
+        }
+        openButton.onReleased: {
+            fileDialog.visible = true
+        }
+    }
+
 
     header: ToolBar {
         contentHeight: toolButton.implicitHeight
@@ -75,7 +91,7 @@ ApplicationWindow {
                 bottom: parent.bottom
             }
             width: 200
-            text: "Recpos:" + recorder.record_pos + "\nPlaypos:" + player.play_pos;
+            text: "Recpos:" + recorder.record_pos + "\nPlaypos:" + player.play_pos + "\nPlaying:" + player.playing;
         }
 
         Rectangle {
@@ -114,11 +130,12 @@ ApplicationWindow {
             anchors.fill: parent
 
             ItemDelegate {
-                text: qsTr("PlayArea")
+                text: qsTr("FileDialog")
                 width: parent.width
                 onClicked: {
-                    stackView.push("PlayArea.qml")
+                    stackView.push("FileForm.ui.qml")
                     drawer.close()
+                    fileForm.fileDialog.visible = true
                 }
             }
             ItemDelegate {

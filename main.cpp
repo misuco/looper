@@ -16,11 +16,15 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
+    app.setOrganizationName("misuco");
+    app.setOrganizationDomain("misuco.org");
+
     AudioInputController audio_input_controller;
     AudioOutputController audio_output_controller;
 
     Sound sample;
-    sample.init(88200);
+    //sample.init(88200);
+    //sample.init_from_file( "qrc:/res/wav/t1.wav");
 
     Recorder recorder;
     recorder.set_sample(&sample);

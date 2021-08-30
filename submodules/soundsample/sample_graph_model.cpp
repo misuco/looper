@@ -1,4 +1,5 @@
 #include "sample_graph_model.h"
+#include <QDebug>
 
 Sample_graph_model::Sample_graph_model(QObject *parent) : QAbstractListModel(parent) {}
 
@@ -26,9 +27,14 @@ void Sample_graph_model::reset()
     endRemoveRows();
 }
 
-int Sample_graph_model::size() {return m_data.size();}
+int Sample_graph_model::size()
+{
+    //qDebug() << "SampleGraphModel::size " << m_data.size();
+    return m_data.size();
+}
 
-int Sample_graph_model::rowCount(const QModelIndex &) const {
+int Sample_graph_model::rowCount(const QModelIndex &) const
+{
     //qDebug() << "SampleGraphModel::rowCount " << m_data.size();
     return m_data.size();
 }

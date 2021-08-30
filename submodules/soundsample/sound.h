@@ -1,6 +1,7 @@
 #ifndef SOUND_H
 #define SOUND_H
 
+#include <QString>
 
 class Sound
 {
@@ -29,13 +30,15 @@ public:
 
     void normalize();
 
+    bool init_from_file(QString filename);
+
 private:
     int m_buffer_size;
     Sample * m_buffer;
     int m_write_pointer;
     double m_read_pointer;
     double m_read_speed;
-    double m_previous_sample;
+    //double m_previous_sample;
     double m_loop_length;
     double m_start_point;
 

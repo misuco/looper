@@ -1,5 +1,7 @@
 #include "sound.h"
 #include <QDebug>
+#include <QFile>
+#include <AudioFile.h>
 
 Sound::Sound() :
     m_buffer_size { 0 } ,
@@ -7,7 +9,7 @@ Sound::Sound() :
     m_write_pointer { 0 } ,
     m_read_pointer { 0 } ,
     m_read_speed { 1 } ,
-    m_previous_sample { 0 } ,
+    //m_previous_sample { 0 } ,
     m_loop_length { 0 } ,
     m_start_point { 0 }
 {
@@ -17,14 +19,68 @@ Sound::Sound() :
 Sound::~Sound()
 {
     if(m_buffer_size>0) {
-        delete m_buffer;
+        delete[] m_buffer;
     }
+}
+
+bool Sound::init_from_file(QString filename)
+{
+    filename = filename.replace("file:///","");
+    std::string f = filename.toStdString();
+    QFile file( filename );
+    qDebug() << "Opening " << filename << " exists " << file.exists();
+
+    file.open( QIODevice::ReadOnly);
+    QByteArray bytearray = file.readAll();
+    file.close();
+    qDebug() << "read " << bytearray.size() << " bytes ";
+
+    if( bytearray.size() > 0 ) {
+        std::vector<uint8_t> audio_vector;
+        for(int i=0;i<bytearray.size();i++) {
+            audio_vector.push_back(bytearray.at(i));
+        }
+
+        AudioFileFormat audioFileFormat;
+        AudioFile<double> audio_file;
+        audioFileFormat = audio_file.determineAudioFileFormat ( audio_vector );
+
+        if (audioFileFormat == AudioFileFormat::Wave)
+        {
+            qDebug() << "Detected wav format";
+            audio_file.decodeWaveFile( audio_vector );
+        }
+        else if (audioFileFormat == AudioFileFormat::Aiff)
+        {
+            qDebug() << "Detected aif format";
+            audio_file.decodeAiffFile( audio_vector );
+        }
+
+        qDebug() << "bits per sample " << audio_file.getBitDepth();
+        qDebug() << "channel number " << audio_file.getNumChannels();
+        qDebug() << "frame number " << audio_file.getNumSamplesPerChannel();
+        qDebug() << "sample rate " << audio_file.getSampleRate();
+
+        m_buffer_size = audio_file.getNumSamplesPerChannel();
+        m_loop_length = m_buffer_size;
+
+        m_buffer = new Sound::Sample[m_buffer_size];
+
+        for(int i=0;i<m_buffer_size;i++) {
+            m_buffer[i].left = audio_file.samples[0][i];
+            m_buffer[i].right = audio_file.samples[1][i];
+        }
+
+        return true;
+    }
+
+    return false;
 }
 
 void Sound::init(int size)
 {
     if(m_buffer_size>0) {
-        delete m_buffer;
+        delete[] m_buffer;
     }
     m_buffer_size = size;
     m_buffer = new Sound::Sample[size];

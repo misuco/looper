@@ -1,6 +1,8 @@
 QT += quick multimedia
 CONFIG += c++11
 
+INCLUDEPATH += submodules/wav
+
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Refer to the documentation for the
@@ -13,7 +15,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        main.cpp \
+    main.cpp \
     submodules/audiooutput/audiooutput.cpp \
     submodules/audioinput/audioinput.cpp \
     submodules/audioinput/audioinfo.cpp \
@@ -50,4 +52,17 @@ HEADERS += \
     submodules/soundsample/sound.h \
     submodules/soundsample/sound_image.h \
     submodules/soundsample/sample_graph_model.h \
-    submodules/soundsample/sound_image_gesture.h
+    submodules/soundsample/sound_image_gesture.h \
+    submodules/wav/AudioFile.h
+
+DISTFILES += \
+    android/AndroidManifest.xml \
+    android/build.gradle \
+    android/gradle.properties \
+    android/gradle/wrapper/gradle-wrapper.jar \
+    android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradlew \
+    android/gradlew.bat \
+    android/res/values/libs.xml
+
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
