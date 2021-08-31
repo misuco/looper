@@ -37,7 +37,7 @@ class Player : public QObject, public IAudioSource
 
 public:
     Q_INVOKABLE void factory_preset();
-    Q_INVOKABLE void load_sample( QString filename );
+    Q_INVOKABLE void load_sample_dir( QString filename );
     Q_INVOKABLE void set_playing(bool state);
 
     explicit Player(QObject *parent = nullptr);

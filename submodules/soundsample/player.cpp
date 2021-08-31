@@ -21,25 +21,37 @@
 #include "player.h"
 #include "track.h"
 #include <QDebug>
+#include <QFileInfo>
+#include <QDir>
 
 void Player::factory_preset()
 {
-    load_sample( ":/res/wav/loops/a82.wav" );
-    load_sample( ":/res/wav/loops/a120.wav" );
-    load_sample( ":/res/wav/loops/a122.wav" );
-    load_sample( ":/res/wav/loops/b122.wav" );
-    load_sample( ":/res/wav/loops/a124.wav" );
-    load_sample( ":/res/wav/loops/sweep.wav" );
+    load_sample_dir( ":/res/wav/loops/a82.wav" );
 }
 
-void Player::load_sample(QString filename)
+void Player::load_sample_dir(QString filename)
 {
-    m_sound_sample=new Sound();
-    m_sound_sample->init_from_file( filename );
-    m_sound_samples.append( m_sound_sample );
+    filename = filename.replace("file:///","");
 
-    Track * track = new Track( filename );
-    m_tracks.append( track );
+    QFileInfo file_info( filename );
+    QDir file_dir = file_info.absoluteDir();
+
+    foreach( auto file, file_dir.entryList() ) {
+
+        if( file.endsWith( ".wav",  Qt::CaseInsensitive  ) ||
+            file.endsWith( ".aif",  Qt::CaseInsensitive  ) ||
+            file.endsWith( ".aiff", Qt::CaseInsensitive  ) ) {
+
+            m_sound_sample=new Sound();
+
+            m_sound_sample->init_from_file( file_dir.path() + "/" + file );
+            m_sound_samples.append( m_sound_sample );
+
+            Track * track = new Track( file );
+            m_tracks.append( track );
+        }
+    }
+
     emit QmlTracksUpdated();
 
 }

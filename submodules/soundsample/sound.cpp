@@ -45,7 +45,6 @@ Sound::~Sound()
 
 bool Sound::init_from_file(QString filename)
 {
-    filename = filename.replace("file:///","");
     std::string f = filename.toStdString();
     QFile file( filename );
     qDebug() << "Opening " << filename << " exists " << file.exists();
