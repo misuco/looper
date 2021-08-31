@@ -29,6 +29,17 @@ void Player::factory_preset()
     load_sample_dir( ":/res/wav/loops/a82.wav" );
 }
 
+void Player::init_set() {
+    m_sound_samples.append( QList<Sound *>() );
+    m_tracks.append( QList<QObject *>() );
+    m_current_set++;
+}
+
+QList<QObject *> Player::get_current_tracks()
+{
+    return m_tracks[m_current_set];
+}
+
 void Player::load_sample_dir(QString filename)
 {
     filename = filename.replace("file:///","");
@@ -36,19 +47,21 @@ void Player::load_sample_dir(QString filename)
     QFileInfo file_info( filename );
     QDir file_dir = file_info.absoluteDir();
 
+    init_set();
+
     foreach( auto file, file_dir.entryList() ) {
 
         if( file.endsWith( ".wav",  Qt::CaseInsensitive  ) ||
             file.endsWith( ".aif",  Qt::CaseInsensitive  ) ||
             file.endsWith( ".aiff", Qt::CaseInsensitive  ) ) {
 
-            m_sound_sample=new Sound();
+            Sound * sound_sample=new Sound();
 
-            m_sound_sample->init_from_file( file_dir.path() + "/" + file );
-            m_sound_samples.append( m_sound_sample );
+            sound_sample->init_from_file( file_dir.path() + "/" + file );
+            m_sound_samples[m_current_set].append( sound_sample );
 
             Track * track = new Track( file );
-            m_tracks.append( track );
+            m_tracks[m_current_set].append( track );
         }
     }
 
@@ -60,9 +73,10 @@ Player::Player(QObject *parent) : QObject(parent),
     m_silence { .left=0, .right=0 },
     m_playing { false },
     m_play_pos { 0 },
-    m_update_counter { 0 }
+    m_update_counter { 0 },
+    m_current_set { -1 }
 {
-
+    init_set();
 }
 
 const Sound::Sample& Player::get_next_sample()
@@ -84,10 +98,10 @@ const Sound::Sample& Player::get_next_sample()
         m_next_sample.right = 0;
 
         int track=0;
-        foreach( auto sample, m_sound_samples ) {
+        foreach( auto sample, m_sound_samples[m_current_set] ) {
             const Sound::Sample& s = sample->get_next_sample();
 
-            Track * t = dynamic_cast<Track *>(m_tracks.at( track ));
+            Track * t = dynamic_cast<Track *>(m_tracks[m_current_set].at( track ));
             if( t && !t->get_muted() ) {
                 m_next_sample.left += s.left;
                 m_next_sample.right += s.right;
@@ -117,12 +131,16 @@ const Sound::Sample& Player::get_next_sample()
 
 void Player::set_sample(Sound *s)
 {
-    m_sound_sample = s;
+    m_sound_samples[m_current_set].append( s );
+
+    Track * track = new Track( "---" );
+    m_tracks[m_current_set].append( track );
+
 }
 
 void Player::set_playing(bool state)
 {
-    if( state == true && m_sound_sample->get_size() > 0 ) {
+    if( state == true && m_sound_samples.size() > 0 ) {
         m_playing = true;
     } else {
         m_playing = false;
