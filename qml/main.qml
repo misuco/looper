@@ -40,7 +40,7 @@ ApplicationWindow {
         }
         fileDialog.onAccepted: {
             console.log("You chose: " + fileDialog.fileUrls)
-            player.load_sample( fileDialog.fileUrls )
+            player.load_sample_dir( fileDialog.fileUrls )
             //sound_image.calculate_graph()
             stackView.pop()
             player.set_playing( true )
@@ -116,7 +116,7 @@ ApplicationWindow {
                 text: ">"
             }
 
-            Component.onCompleted: player.factory_preset()
+            //Component.onCompleted: player.factory_preset()
 
             MouseArea {
                 anchors.fill: parent
