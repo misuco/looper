@@ -99,9 +99,37 @@ ApplicationWindow {
                 bottom: parent.bottom
             }
             width: 200
-            text: "Playing:" + player.playing;
+            text: "Playing:" + player.playing + "\nSet:" + player.set + "/" + player.set_count;
         }
 
+
+        Rectangle {
+            id: nextButton
+            property int set: 0
+            anchors.top: parent.top
+            anchors.right: playButton.left
+            width: parent.height
+            height: parent.height
+            color: "Yellow"
+
+            Text {
+                anchors.fill: parent
+                text: ">|"
+            }
+
+            //Component.onCompleted: player.factory_preset()
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    nextButton.set++
+                    if( nextButton.set >= player.set_count) {
+                        nextButton.set=0;
+                    }
+                    player.set_set( nextButton.set )
+                }
+            }
+        }
 
         Rectangle {
             id: playButton

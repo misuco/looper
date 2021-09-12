@@ -32,12 +32,17 @@ void Player::factory_preset()
 void Player::init_set() {
     m_sound_samples.append( QList<Sound *>() );
     m_tracks.append( QList<QObject *>() );
-    m_current_set++;
+    m_set++;
+}
+
+int Player::set_count()
+{
+    return m_tracks.size();
 }
 
 QList<QObject *> Player::get_current_tracks()
 {
-    return m_tracks[m_current_set];
+    return m_tracks[m_set];
 }
 
 void Player::load_sample_dir(QString filename)
@@ -58,10 +63,10 @@ void Player::load_sample_dir(QString filename)
             Sound * sound_sample=new Sound();
 
             sound_sample->init_from_file( file_dir.path() + "/" + file );
-            m_sound_samples[m_current_set].append( sound_sample );
+            m_sound_samples[m_set].append( sound_sample );
 
             Track * track = new Track( file );
-            m_tracks[m_current_set].append( track );
+            m_tracks[m_set].append( track );
         }
     }
 
@@ -74,7 +79,7 @@ Player::Player(QObject *parent) : QObject(parent),
     m_playing { false },
     m_play_pos { 0 },
     m_update_counter { 0 },
-    m_current_set { -1 }
+    m_set { -1 }
 {
     init_set();
 }
@@ -98,10 +103,10 @@ const Sound::Sample& Player::get_next_sample()
         m_next_sample.right = 0;
 
         int track=0;
-        foreach( auto sample, m_sound_samples[m_current_set] ) {
+        foreach( auto sample, m_sound_samples[m_set] ) {
             const Sound::Sample& s = sample->get_next_sample();
 
-            Track * t = dynamic_cast<Track *>(m_tracks[m_current_set].at( track ));
+            Track * t = dynamic_cast<Track *>(m_tracks[m_set].at( track ));
             if( t && !t->get_muted() ) {
                 m_next_sample.left += s.left;
                 m_next_sample.right += s.right;
@@ -131,10 +136,10 @@ const Sound::Sample& Player::get_next_sample()
 
 void Player::set_sample(Sound *s)
 {
-    m_sound_samples[m_current_set].append( s );
+    m_sound_samples[m_set].append( s );
 
     Track * track = new Track( "---" );
-    m_tracks[m_current_set].append( track );
+    m_tracks[m_set].append( track );
 
 }
 
@@ -146,4 +151,19 @@ void Player::set_playing(bool state)
         m_playing = false;
     }
     emit QmlPlayingUpdated();
+}
+
+int Player::set_set(int s)
+{
+    if( s >= m_tracks.size() ) {
+        s = m_tracks.size() - 1 ;
+    } else if ( s < 0 ) {
+        s = 0;
+    }
+    if( s != m_set ) {
+        m_set = s;
+        emit QmlTracksUpdated();
+        emit QmlSetUpdated();
+    }
+    return s;
 }

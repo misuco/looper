@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
     AudioOutputController audio_output_controller;
 
     Sound sample;
+    sample.init(1);
 
     Recorder recorder;
     recorder.set_sample(&sample);

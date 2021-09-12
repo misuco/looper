@@ -33,12 +33,15 @@ class Player : public QObject, public IAudioSource
 
     Q_PROPERTY(int  play_pos    MEMBER m_play_pos    NOTIFY QmlPlayPosUpdated)
     Q_PROPERTY(bool playing     MEMBER m_playing     NOTIFY QmlPlayingUpdated)
+    Q_PROPERTY(int  set         MEMBER m_set         NOTIFY QmlSetUpdated)
+    Q_PROPERTY(int  set_count   READ   set_count     NOTIFY QmlSetUpdated)
     Q_PROPERTY(QList<QObject *> tracks READ get_current_tracks NOTIFY QmlTracksUpdated)
 
 public:
     Q_INVOKABLE void factory_preset();
     Q_INVOKABLE void load_sample_dir( QString filename );
     Q_INVOKABLE void set_playing(bool state);
+    Q_INVOKABLE int  set_set(int s);
 
     explicit Player(QObject *parent = nullptr);
 
@@ -49,6 +52,7 @@ signals:
     void QmlPlayPosUpdated();
     void QmlPlayingUpdated();
     void QmlTracksUpdated();
+    void QmlSetUpdated();
 
 public slots:
 
@@ -65,12 +69,14 @@ private:
 
     int m_update_counter;
 
-    int m_current_set;
+    int m_set;
 
     Sound::Sample m_next_sample;
 
     void calculate();
     void init_set();
+
+    int set_count();
 
     QList<QObject *> get_current_tracks();
 };
